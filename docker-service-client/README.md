@@ -43,9 +43,34 @@ service communication fails.
 
 ## The solution
 
+This solution applies to a Windows host and Linux containers, using the default .NET image
+`dotnet/sdk:9.0`.
 
+The approach we need to use to be able to access the service endpoints from the client is to use 
+our own self-signed certificate, which contains all the names of the services that we want to access,
+and follows the rules for ASP.NET Core self-signed certificates. 
 
-## How to run this sample
+The steps we need to follow are:
+
+1. Create the self-signed certificate on the host using PowerShell (the `dotnet dev-certs https` tool does not allow us 
+to specify the parameters we need) and also add it as trusted root. The certificate needs to:
+    - Have `localhost` as subject and issuer
+    - Include all the service names as alternative names
+    - Support Server Authentication as Enhanced Key Usage
+    - Have the value 02 for property with OID `1.3.6.1.4.1.311.84.1.1`, as this is checked
+      by ASP.NET Core to determine that this is a valid development certificate (see link to code in References).
+
+    This is what the certificate should look like in the Certificate Manager:
+
+    ![Certificate](assets/certificate.png)
+
+1. Export this certificate in a pfx file that we will define as the server certificate in the services, using
+   the `ASPNETCORE_Kestrel__Certificates__Default__Path` environment variable in the `docker-compose.override.yml` file.
+1. Export the certificate's public key in a pem file, that we will define as a trusted issuer in the client,
+   using the `SSL_CERT_PATH` environment variable in the `docker-compose.override.yml` file
+   and run `c_rehash` in the client container before running the application.
+
+# How to run this sample
 
 Open the solution in Visual Studio.
 
