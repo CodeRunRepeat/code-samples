@@ -38,7 +38,7 @@ aspnet-echo-service:
     dockerfile: aspnet-echo-service/Dockerfile
 ```
 The endpoint that the client needs to use to access the HTTPS endpoint for the Open API, if it is exposed on port 8081,
-is `http://aspnet-echo-service:8081`. The self-signed service certificate does not include this name though, so client-
+is `https://aspnet-echo-service:8081`. The default self-signed service certificate does not include this name though, so client-
 service communication fails.
 
 ## The solution
