@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcEchoService.Protos";
+
+package echo;
+
+message EchoRequest {
+	string content = 1;
+}
+
+message EchoResponse {
+	string content = 1;
+	int32 count = 2;
+}
+
+service Echo {
+	rpc Echo (EchoRequest) returns (EchoResponse);
+}

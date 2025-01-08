@@ -1,0 +1,27 @@
+services:
+  test-client:
+    image: ${DOCKER_REGISTRY-}echoclient
+    build:
+      context: .
+      dockerfile: test-client/Dockerfile
+      target: debug
+    depends_on:
+      aspnet-echo-service:
+        condition: service_started
+      grpc-echo-service:
+        condition: service_started
+
+  aspnet-echo-service:
+    image: ${DOCKER_REGISTRY-}aspnetechoservice
+    build:
+      context: .
+      dockerfile: aspnet-echo-service/Dockerfile
+      target: debug
+    
+  grpc-echo-service:
+    image: ${DOCKER_REGISTRY-}grpcechoservice
+    build:
+      context: .
+      dockerfile: grpc-echo-service/Dockerfile
+      target: debug
+

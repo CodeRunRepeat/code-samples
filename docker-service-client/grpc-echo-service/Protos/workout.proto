@@ -1,0 +1,85 @@
+syntax = "proto3";
+import "google/protobuf/duration.proto";
+
+option csharp_namespace = "GrpcTrainingPlans.Protos";
+
+package workout;
+
+enum SegmentType {
+    RUN = 0;
+    WARMUP = 1;
+    COOLDOWN = 2;
+	REST = 3;
+	RECOVER = 4;
+}
+
+enum SegmentSizeType {
+	TIME = 0;
+	DISTANCE = 1;
+}
+
+message Distance {
+	int32 meters = 1;
+}
+
+message SegmentSize {
+	SegmentSizeType type = 1;
+	optional google.protobuf.Duration duration = 2;
+	optional Distance distance = 3;
+}
+
+message PaceDefinition {
+	google.protobuf.Duration pacePerKm = 1;
+	optional google.protobuf.Duration paceDeviation = 2;
+}
+
+message RunningSegment {
+	SegmentType segmentType = 1;
+	SegmentSize size = 2;
+	optional PaceDefinition pace = 3;
+}
+
+message RunningSegmentGroup {
+	repeated RunningSegment segments = 1;
+	int32 repetitions = 2;
+	bool skipLast = 3;
+}
+
+message RunningWorkout {
+	string id = 1;
+	string name = 2;
+	string description = 3;
+	repeated RunningSegmentGroup segmentGroups = 4;
+}
+
+enum WorkoutType {
+	CONTINUOUS = 0;
+	INTERVALS = 1;
+	//PROGRESSION = 2;
+}
+
+message ContinuousWorkoutDefinition {
+	SegmentSize size = 1;
+	PaceDefinition targetPace = 2;
+}
+message IntervalWorkoutDefinition {
+	SegmentSize intervalSize = 1;
+	SegmentSize restSize = 2;
+	int32 repetitions = 3;
+	PaceDefinition targetPace = 4;
+	PaceDefinition recoveryPace = 5;
+}
+
+message BuildWorkoutRequest {
+	WorkoutType workoutType = 1;
+
+	bool includeWarmup = 2;
+	bool includeCooldown = 3;
+	
+	optional ContinuousWorkoutDefinition continuousWorkout = 4;
+	optional IntervalWorkoutDefinition intervalWorkout = 5;
+}
+
+service WorkoutBuilder {
+	rpc BuildWorkout (BuildWorkoutRequest) returns (RunningWorkout);
+}

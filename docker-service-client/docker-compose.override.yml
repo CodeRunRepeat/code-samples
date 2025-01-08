@@ -1,0 +1,36 @@
+
+services:
+  aspnet-echo-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  test-client:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - SSL_CERT_DIR=/app:/usr/lib/ssl/certs 
+    user: root
+    command: c_rehash && dotnet test-client.dll
+
+  grpc-echo-service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

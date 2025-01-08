@@ -1,0 +1,6 @@
+@aspnet_echo_service_HostAddress = http://localhost:5175
+
+GET {{aspnet_echo_service_HostAddress}}/echo/
+Accept: application/json
+
+###

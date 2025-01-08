@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "test-client": "StartDebugging",
+        "aspnet-echo-service": "StartDebugging",
+        "grpc-echo-service": "StartDebugging"
+      }
+    }
+  }
+}
